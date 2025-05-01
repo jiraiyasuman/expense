@@ -1,8 +1,9 @@
 package com.expensetracker_spring.controller;
 
 import java.util.List;
-
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.aop.TargetClassAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +26,8 @@ import jakarta.validation.Valid;
 @RequestMapping("expense")
 public class ExpenseController {
 
+	private static final Logger logger =
+			LogManager.getLogger(ExpenseController.class);
 	private ExpenseService expenseService;
 
 	@Autowired
@@ -35,28 +38,33 @@ public class ExpenseController {
 	@PostMapping("save")
 	public ResponseEntity<ExpenseDto> saveExpense(@Valid @RequestBody  ExpenseDto expenseDto){
 		ExpenseDto savedExpenseDto = expenseService.addExpense(expenseDto);
+		logger.info("Controller save is being executed");
 		return ResponseEntity.ok(savedExpenseDto);
 	}
 	@GetMapping("list")
 	public ResponseEntity<List<ExpenseDto>> getAll(){
 		List<ExpenseDto> list = expenseService.getAllExpense();
+		logger.info("Controller list is being executed");
 		return ResponseEntity.ok(list);
 	}
 	@GetMapping("list/{id}")
 	public ResponseEntity<ExpenseDto> getById(@PathVariable("id") int id){
 		ExpenseDto expenseDto = expenseService.getExpenseById(id);
+		logger.info("Controller get expense by id is being executed");
 		return ResponseEntity.ok(expenseDto);
 	}
 	
 	@PutMapping("update/{id}")
 	public ResponseEntity<ExpenseDto> updateExpense(@PathVariable("id") int id, @Valid @RequestBody  ExpenseDto expenseDto){
 		ExpenseDto updatedDto = expenseService.updateExpense(id, expenseDto);
+		logger.info("Controller update by id is being executed");
 		return ResponseEntity.ok(updatedDto);
 		
 	}
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<String> deleteExpense(@PathVariable("id") int id){
 		expenseService.deleteExpense(id);
+		logger.info("Controller delete by id is being executed");
 		return ResponseEntity.ok("Expense Deleted successfully");
 	}
 }
